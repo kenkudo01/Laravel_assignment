@@ -59,19 +59,28 @@ class StudentsController extends Controller
     public function subjectDetails($id)
     {
         $project = Project::findOrFail($id);
+
+    
+        if (!auth()->user()->subjects->contains($project->id)) {
+            abort(403);
+        }
+
         return view('students.subject-details', compact('project'));
     }
+
     public function showTask($taskId)
     {
         $task = Task::findOrFail($taskId);
-
+        if (!auth()->user()->subjects->contains($project->id)) {
+            abort(403);
+        }
         return view('students.task-details', compact('task'));
     }
 
     public function submitSolution(Request $request, $taskId)
     {
         $validated = $request->validate([
-            'content' => 'required|string|min:5',  // テキストエリア必須
+            'content' => 'required|string|min:5', 
         ]);
 
         Solution::create([

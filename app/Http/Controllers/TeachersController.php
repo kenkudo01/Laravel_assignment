@@ -75,7 +75,14 @@ class TeachersController extends Controller
     }
 
     public function details($id) {
+        
+        
         $project = Project::findOrFail($id);
+        if ($project->user_id !== auth()->id()) {
+            abort(403);
+        }
+        
+
         // dd($project);
         return view('teachers.details', [
             "project" => $project,
@@ -140,7 +147,7 @@ class TeachersController extends Controller
         $task->name = $validated['name'];
         $task->description = $validated['description'];
         $task->points = $validated['points'];
-        $task->project_id = $projectId; // 親の教科に紐付ける
+        $task->project_id = $projectId;
         $task->save();
 
         return redirect()->route('teachers.details', ['id' => $projectId]);
